@@ -70,26 +70,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </center>
     
     <!--TODO: membuat template berjenis dom-repeat untuk menampilkan data mahasiswa-->
-
-    <!--TODO: membuat iron-ajax untuk mengambil data dari API-->
-
-
-    </div>
+    <template is="dom-repeat" items="[[data]]">
+      <div class="card">
+        <img src="[[item.foto_mahasiswa]]" class="gambar" alt="gambar">
+        <p>Nama: [[item.nama_mahasiswa]]</p>
+        <p>Kursus: [[item.kursus_mahasiswa]]</p>
+      </div>
     </template>
+    <!--TODO: membuat iron-ajax untuk mengambil data dari API-->
+    <iron-ajax
+     auto
+     url="/api/mahasiswa"
+     handle-as="json"
+     method="GET"
+     on-response="_handleResponse"
+     debounce-duration="300">
+    </iron-ajax>
+  </template>
 
     <script>
       class MyView1 extends Polymer.Element {
         static get is() {
             return 'my-view1';
         }
-        // TODO: membuat fungsi untuk menghitung index berdasarkan jumlah data dengan computed property
-
+        
+       
         /* TODO: mendefinisikan sebuah properti bernama data sebagai objek (type: Object) dan
         dikonfigurasi untuk mengirim event ketika nilainya berubah (notify: true).  */
+        static get properties() {
+          return {
+            data: {
+              type: Object,
+              notify: true
+            }
+          };
+        }
 
         
         // TODO: membuat fungsi untuk menangani data yang diterima dari API dan memperbarui nilai properti data
         // nama fungsi: _handleResponse dengan parameter event.
+        _handleResponse(e) {
+          this.data = e.detail.response;
+        }
       }
       window.customElements.define(MyView1.is, MyView1);
     </script>
